@@ -2,12 +2,34 @@ import os
 import sys
 import tkinter
 import threading
+import shutil
 from time import sleep
 
 import keyboard
 from pynput.mouse import Controller
 from PIL import Image, ImageTk # pip install pillow
+import PyInstaller.__main__ # pip install pyinstaller
 
+
+NAME = "ScreenLock"
+
+def Install():
+    PyInstaller.__main__.run([
+        os.path.abspath(__file__),
+        f'--name={NAME}',
+        '--onefile',
+        '--windowed',
+        '--add-data',
+        'background.jpg;.'
+    ])
+
+    shutil.move(os.getcwd() + f'\\dist\\{NAME}.exe', os.getcwd())
+
+    os.remove(f'{NAME}.spec')
+
+    sleep(5)
+    shutil.rmtree('./build/')
+    shutil.rmtree('./dist/')
 
 def blockinput():
     global block_input_flag
@@ -49,25 +71,30 @@ def resource_path(relative_path):
 
 if __name__ == '__main__':
 
-    block_input_flag = False
 
-    blockinput()
+    if len(sys.argv) > 1:
+        if sys.argv[1] in ["-i", "--install"]:
+            Install()
+    else:
+        block_input_flag = False
 
-    tk = tkinter.Tk()
+        blockinput()
 
-    tk.attributes('-fullscreen', True)
-    tk.attributes('-topmost', True)
+        tk = tkinter.Tk()
 
-    width = tk.winfo_screenwidth()
-    height = tk.winfo_screenheight()
+        tk.attributes('-fullscreen', True)
+        tk.attributes('-topmost', True)
 
-    img = Image.open(resource_path('background.jpg')).resize((width, height))
-    img = ImageTk.PhotoImage(img)
+        width = tk.winfo_screenwidth()
+        height = tk.winfo_screenheight()
 
-    tkinter.Label(image=img).pack()
+        img = Image.open(resource_path('background.jpg')).resize((width, height))
+        img = ImageTk.PhotoImage(img)
 
-    t = threading.Thread(target=MainLoop, args=(tk,))
-    t.start()
+        tkinter.Label(image=img).pack()
 
-    tk.protocol('WM_DELETE_WINDOW', lambda: sys.exit())
-    tk.mainloop()
+        t = threading.Thread(target=MainLoop, args=(tk,))
+        t.start()
+
+        tk.protocol('WM_DELETE_WINDOW', lambda: sys.exit())
+        tk.mainloop()
