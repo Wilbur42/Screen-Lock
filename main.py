@@ -12,6 +12,7 @@ import PyInstaller.__main__ # pip install pyinstaller
 
 
 NAME = "ScreenLock"
+block_input_flag = False
 
 def Install():
     PyInstaller.__main__.run([
@@ -56,8 +57,8 @@ def blockinput_stop():
         keyboard.unblock_key(i)
     block_input_flag = False
 
-def MainLoop(tk):
-    sleep(5) # Will Lock for 5 seconds
+def MainLoop(tk, duration):
+    sleep(duration)
     unblockinput()
     tk.quit()
 
@@ -71,30 +72,33 @@ def resource_path(relative_path):
 
 if __name__ == '__main__':
 
+    duration = 5 # Seconds
+    block_input_flag = False
 
     if len(sys.argv) > 1:
         if sys.argv[1] in ["-i", "--install"]:
             Install()
-    else:
-        block_input_flag = False
+            sys.exit()
+        elif sys.argv[1] in ["-d", "--duration"]:
+            duration = int(sys.argv[2])
 
-        blockinput()
+    blockinput()
 
-        tk = tkinter.Tk()
+    tk = tkinter.Tk()
 
-        tk.attributes('-fullscreen', True)
-        tk.attributes('-topmost', True)
+    tk.attributes('-fullscreen', True)
+    tk.attributes('-topmost', True)
 
-        width = tk.winfo_screenwidth()
-        height = tk.winfo_screenheight()
+    width = tk.winfo_screenwidth()
+    height = tk.winfo_screenheight()
 
-        img = Image.open(resource_path('background.jpg')).resize((width, height))
-        img = ImageTk.PhotoImage(img)
+    img = Image.open(resource_path('background.jpg')).resize((width, height))
+    img = ImageTk.PhotoImage(img)
 
-        tkinter.Label(image=img).pack()
+    tkinter.Label(image=img).pack()
 
-        t = threading.Thread(target=MainLoop, args=(tk,))
-        t.start()
+    t = threading.Thread(target=MainLoop, args=(tk, duration))
+    t.start()
 
-        tk.protocol('WM_DELETE_WINDOW', lambda: sys.exit())
-        tk.mainloop()
+    tk.protocol('WM_DELETE_WINDOW', lambda: sys.exit())
+    tk.mainloop()
