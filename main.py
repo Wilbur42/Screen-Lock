@@ -11,22 +11,21 @@ from PIL import Image, ImageTk # pip install pillow
 import PyInstaller.__main__ # pip install pyinstaller
 
 
-NAME = "ScreenLock"
 block_input_flag = False
 
-def Install():
+def Install(name):
     PyInstaller.__main__.run([
         os.path.abspath(__file__),
-        f'--name={NAME}',
+        f'--name={name}',
         '--onefile',
         '--windowed',
         '--add-data',
         'background.jpg;.'
     ])
 
-    shutil.move(os.getcwd() + f'\\dist\\{NAME}.exe', os.getcwd())
+    shutil.move(os.getcwd() + f'\\dist\\{name}.exe', os.getcwd())
 
-    os.remove(f'{NAME}.spec')
+    os.remove(f'{name}.spec')
 
     sleep(5)
     shutil.rmtree('./build/')
@@ -72,15 +71,17 @@ def resource_path(relative_path):
 
 if __name__ == '__main__':
 
+    name = "ScreenLock"
     duration = 5 # Seconds
     block_input_flag = False
 
     if len(sys.argv) > 1:
         if sys.argv[1] in ["-i", "--install"]:
-            Install()
+            name = sys.argv[2] if len(sys.argv) > 2 else name
+            Install(name)
             sys.exit()
         elif sys.argv[1] in ["-d", "--duration"]:
-            duration = int(sys.argv[2])
+            duration = int(sys.argv[2]) if len(sys.argv) > 2 else duration
 
     blockinput()
 
