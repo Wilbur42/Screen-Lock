@@ -76,12 +76,26 @@ if __name__ == '__main__':
     block_input_flag = False
 
     if len(sys.argv) > 1:
+        if sys.argv[1] in ["-d", "--duration"]:
+            duration = int(sys.argv[2]) if len(sys.argv) > 2 else duration
+
+        if sys.argv[1] in ["--uninstall"]:
+            name = sys.argv[2] if len(sys.argv) > 2 else name
+            if os.path.exists(name + '.exe'):
+                os.remove(name + '.exe')
+            sys.exit()
+
         if sys.argv[1] in ["-i", "--install"]:
             name = sys.argv[2] if len(sys.argv) > 2 else name
             Install(name)
             sys.exit()
-        elif sys.argv[1] in ["-d", "--duration"]:
-            duration = int(sys.argv[2]) if len(sys.argv) > 2 else duration
+
+        if sys.argv[1] in ["-u", "--update"]:
+            name = sys.argv[2] if len(sys.argv) > 2 else name
+            if os.path.exists(name + '.exe'):
+                os.remove(name + '.exe')
+            Install(name)
+            sys.exit()
 
     blockinput()
 
