@@ -80,6 +80,10 @@ if __name__ == '__main__':
             if arg in sys.argv:
                 duration = int(sys.argv[sys.argv.index(arg)+1]) if len(sys.argv) > 2 else duration
 
+        for arg in ["-n", "--name"]:
+            if arg in sys.argv:
+                name = sys.argv[sys.argv.index(arg)+1] if len(sys.argv) > 2 else name
+
         if sys.argv[1] in ["--uninstall"]:
             name = sys.argv[2] if len(sys.argv) > 2 else name
             if os.path.exists(name + '.exe'):
