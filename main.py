@@ -76,8 +76,9 @@ if __name__ == '__main__':
     block_input_flag = False
 
     if len(sys.argv) > 1:
-        if sys.argv[1] in ["-d", "--duration"]:
-            duration = int(sys.argv[2]) if len(sys.argv) > 2 else duration
+        for arg in ["-d", "--duration"]:
+            if arg in sys.argv:
+                duration = int(sys.argv[sys.argv.index(arg)+1]) if len(sys.argv) > 2 else duration
 
         if sys.argv[1] in ["--uninstall"]:
             name = sys.argv[2] if len(sys.argv) > 2 else name
