@@ -13,14 +13,14 @@ import PyInstaller.__main__ # pip install pyinstaller
 
 block_input_flag = False
 
-def Install(name):
+def Install(name, background):
     PyInstaller.__main__.run([
         os.path.abspath(__file__),
         f'--name={name}',
         '--onefile',
         '--windowed',
         '--add-data',
-        'background.jpg;.'
+        f'{background};.'
     ])
 
     shutil.move(os.getcwd() + f'\\dist\\{name}.exe', os.getcwd())
@@ -72,6 +72,7 @@ def resource_path(relative_path):
 if __name__ == '__main__':
 
     name = "ScreenLock"
+    background = "background.jpg"
     duration = 5 # Seconds
     block_input_flag = False
 
@@ -84,6 +85,10 @@ if __name__ == '__main__':
             if arg in sys.argv:
                 name = sys.argv[sys.argv.index(arg)+1] if len(sys.argv) > 2 else name
 
+        for arg in ["-b", "--background"]:
+            if arg in sys.argv:
+                background = sys.argv[sys.argv.index(arg)+1] if len(sys.argv) > 2 else background
+
         if sys.argv[1] in ["--uninstall"]:
             name = sys.argv[2] if len(sys.argv) > 2 else name
             if os.path.exists(name + '.exe'):
@@ -92,14 +97,14 @@ if __name__ == '__main__':
 
         if sys.argv[1] in ["-i", "--install"]:
             name = sys.argv[2] if len(sys.argv) > 2 else name
-            Install(name)
+            Install(name, background)
             sys.exit()
 
         if sys.argv[1] in ["-u", "--update"]:
             name = sys.argv[2] if len(sys.argv) > 2 else name
             if os.path.exists(name + '.exe'):
                 os.remove(name + '.exe')
-            Install(name)
+            Install(name, background)
             sys.exit()
 
     blockinput()
@@ -112,7 +117,7 @@ if __name__ == '__main__':
     width = tk.winfo_screenwidth()
     height = tk.winfo_screenheight()
 
-    img = Image.open(resource_path('background.jpg')).resize((width, height))
+    img = Image.open(resource_path(background)).resize((width, height))
     img = ImageTk.PhotoImage(img)
 
     tkinter.Label(image=img).pack()
