@@ -79,15 +79,18 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         for arg in ["-d", "--duration"]:
             if arg in sys.argv:
-                duration = int(sys.argv[sys.argv.index(arg)+1]) if len(sys.argv) > 2 else duration
+                index = sys.argv.index(arg)+1
+                duration = int(sys.argv[index]) if len(sys.argv) > index+1 else duration
 
         for arg in ["-n", "--name"]:
             if arg in sys.argv:
-                name = sys.argv[sys.argv.index(arg)+1] if len(sys.argv) > 2 else name
+                index = sys.argv.index(arg)+1
+                name = sys.argv[index] if len(sys.argv) > index+1 else name
 
         for arg in ["-b", "--background"]:
             if arg in sys.argv:
-                background = sys.argv[sys.argv.index(arg)+1] if len(sys.argv) > 2 else background
+                index = sys.argv.index(arg)+1
+                background = sys.argv[index] if len(sys.argv) > index+1 else background
 
         if sys.argv[1] in ["--uninstall"]:
             name = sys.argv[2] if len(sys.argv) > 2 else name
