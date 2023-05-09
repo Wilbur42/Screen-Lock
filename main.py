@@ -3,13 +3,13 @@ import sys
 import tkinter
 import threading
 import shutil
+import argparse
 from time import sleep
 
 import keyboard
 from pynput.mouse import Controller
 from PIL import Image, ImageTk # pip install pillow
 import PyInstaller.__main__ # pip install pyinstaller
-
 
 block_input_flag = False
 
@@ -71,44 +71,35 @@ def resource_path(relative_path):
 
 if __name__ == '__main__':
 
-    name = "ScreenLock"
-    background = "background.jpg"
-    duration = 5 # Seconds
     block_input_flag = False
 
-    if len(sys.argv) > 1:
-        for arg in ["-d", "--duration"]:
-            if arg in sys.argv:
-                index = sys.argv.index(arg)+1
-                duration = int(sys.argv[index]) if len(sys.argv) > index+1 else duration
+    parser = argparse.ArgumentParser(description='Screen lock application')
+    parser.add_argument('-d', '--duration', type=int, default=5, help='The duration in seconds')
+    parser.add_argument('-n', '--name', default='ScreenLock', help='The name of the application')
+    parser.add_argument('-b', '--background', default='background.jpg', help='The path to the background image')
+    parser.add_argument('--install', action='store_true', help='Install the application')
+    parser.add_argument('--update', action='store_true', help='Update the application to the latest version (reinstall)')
+    parser.add_argument('--uninstall', action='store_true', help='Uninstall the application')
+    args = parser.parse_args()
 
-        for arg in ["-n", "--name"]:
-            if arg in sys.argv:
-                index = sys.argv.index(arg)+1
-                name = sys.argv[index] if len(sys.argv) > index+1 else name
+    duration = args.duration
+    name = args.name
+    background = args.background
 
-        for arg in ["-b", "--background"]:
-            if arg in sys.argv:
-                index = sys.argv.index(arg)+1
-                background = sys.argv[index] if len(sys.argv) > index+1 else background
+    if args.uninstall:
+        if os.path.exists(name + '.exe'):
+            os.remove(name + '.exe')
+        sys.exit()
 
-        if sys.argv[1] in ["--uninstall"]:
-            name = sys.argv[2] if len(sys.argv) > 2 else name
-            if os.path.exists(name + '.exe'):
-                os.remove(name + '.exe')
-            sys.exit()
+    if args.install:
+        Install(name, background)
+        sys.exit()
 
-        if sys.argv[1] in ["-i", "--install"]:
-            name = sys.argv[2] if len(sys.argv) > 2 else name
-            Install(name, background)
-            sys.exit()
-
-        if sys.argv[1] in ["-u", "--update"]:
-            name = sys.argv[2] if len(sys.argv) > 2 else name
-            if os.path.exists(name + '.exe'):
-                os.remove(name + '.exe')
-            Install(name, background)
-            sys.exit()
+    if args.update:
+        if os.path.exists(name + '.exe'):
+            os.remove(name + '.exe')
+        Install(name, background)
+        sys.exit()
 
     blockinput()
 
