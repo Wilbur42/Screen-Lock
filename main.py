@@ -86,9 +86,18 @@ if __name__ == '__main__':
     name = args.name
     background = args.background
 
+    if name:
+        if not name.endswith('.exe'):
+            name += '.exe'
+
+        if not os.path.exists(name):
+            print('File not found, installing...')
+            Install(name, background)
+            sys.exit()
+
     if args.uninstall:
-        if os.path.exists(name + '.exe'):
-            os.remove(name + '.exe')
+        if os.path.exists(name):
+            os.remove(name)
         sys.exit()
 
     if args.install:
@@ -96,8 +105,8 @@ if __name__ == '__main__':
         sys.exit()
 
     if args.update:
-        if os.path.exists(name + '.exe'):
-            os.remove(name + '.exe')
+        if os.path.exists(name):
+            os.remove(name)
         Install(name, background)
         sys.exit()
 
