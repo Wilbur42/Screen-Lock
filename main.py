@@ -65,11 +65,7 @@ class ScreenLock:
         self.tk.quit()
 
     def resource_path(self, relative_path):
-        try:
-            base_path = sys._MEIPASS
-        except AttributeError:
-            base_path = os.path.abspath('.')
-
+        base_path = os.path.abspath(os.path.dirname(__file__))
         return os.path.join(base_path, relative_path)
 
     def run(self):
