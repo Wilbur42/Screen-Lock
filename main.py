@@ -106,9 +106,12 @@ if __name__ == '__main__':
             os.remove(screen_lock.name)
         sys.exit()
 
-    if args.install or (screen_lock.name and not os.path.exists(screen_lock.name)):
+    if args.install and (screen_lock.name and not os.path.exists(screen_lock.name)):
         print('File not found, installing...')
         screen_lock.install()
+        sys.exit()
+    elif args.install and (screen_lock.name and os.path.exists(screen_lock.name)):
+        print('File already exists, please use --update or --uninstall')
         sys.exit()
 
     if args.update:
