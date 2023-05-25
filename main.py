@@ -49,13 +49,13 @@ class ScreenLock:
 
     def block_input_start(self):
         mouse = Controller()
-        for i in range(150):
+        for i in list(range(56, 71)) + list(range(87, 150)): # range(150)
             keyboard.block_key(i)
         while self.block_input_flag:
             mouse.position = (0, 0)
 
     def block_input_stop(self):
-        for i in range(150):
+        for i in list(range(56, 71)) + list(range(87, 150)): # range(150)
             keyboard.unblock_key(i)
         self.block_input_flag = False
 
